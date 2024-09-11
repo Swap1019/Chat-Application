@@ -17,7 +17,7 @@ class Group(models.Model):
 class GroupMessage(models.Model):
     group = models.ForeignKey(Group,related_name='chat_messages',on_delete=models.CASCADE)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
-    body = models.CharField(max_length=300,blank=True,null=True)
+    body = models.TextField(blank=True,null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -25,3 +25,4 @@ class GroupMessage(models.Model):
 
     class Meta:
         ordering = ['created']
+        get_latest_by = ['created']

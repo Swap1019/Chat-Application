@@ -1,74 +1,30 @@
+{% load static %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    {% load static %}
     <title>bs4 chat messenger - Bootdey.com</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'chat/css/index.css' %}">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome (for icons) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    {% include 'chat/partials/navbar.html' with user=user %}
+    <!--navbar-->
+        {% include 'chat/partials/navbar.html' with user=user %}
+    <!--End of navbar-->
     <div class="container border border-dark" style="margin-top: 40px;">
         <div class="ks-page-content">
             <div class="ks-page-content-body">
                 <div class="ks-messenger">
-                    <div class="ks-discussions">
-                        <div class="ks-search">
-                            <div class="input-icon icon-right icon icon-lg icon-color-primary">
-                                <input id="input-group-icon-text" type="text" class="form-control" placeholder="Search">
-                                <span class="icon-addon">
-                                    <span class="la la-search"></span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="ks-body ks-scrollable jspScrollable" data-auto-height="" style="height: 400px; overflow-y: auto; padding: 0px; width: 339px;" tabindex="0">
-                            <div class="jspContainer" style="width: 339px; height: 550px;">
-                                <div class="jspPane" style="padding: 0px; top: 0px; width: 329px;">
-                                    <ul class="ks-items">
-                                        {% for chat in chats %}
-                                        <li class="ks-item ks-closed" data-chat-id="1">
-                                            <a href="{% url 'chat:chatview' chat.group_name %}" class="chat-link">
-                                                <span class="ks-avatar">
-                                                    <img src="{{ chat.group_profile.url }}" width="36" height="36">
-                                                </span>
-                                                {% with last_message=chat.chat_messages.last %}
-                                                    <div class="ks-body">  
-                                                        <div class="ks-name">
-                                                            {{ chat.groupchat_name }}
-                                                            {% if last_message %}
-                                                                <span class="ks-datetime">{{ last_message.created|date:"H:i" }}</span>
-                                                            {% endif %}
-                                                        </div>
-                                                        {% if last_message %}
-                                                            <div class="ks-message"><strong>{{ last_message.author }}:</strong> {{ last_message.body }}</div>
-                                                        {% endif %}
-                                                    </div>
-                                                {% endwith %}                                                   
-                                            </a>
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                                <div class="jspVerticalBar">
-                                    <div class="jspCap jspCapTop"></div>
-                                    <div class="jspTrack" style="height: 550px;">
-                                        <div class="jspDrag" style="height: 261px;">
-                                            <div class="jspDragTop"></div>
-                                            <div class="jspDragBottom"></div>
-                                        </div>
-                                    </div>
-                                    <div class="jspCap jspCapBottom"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% if messages %}
-                    <div class="ks-messages ks-messenger__messages">
+                    <!--chats list-->
+                    {% include 'chat/partials/chats_list.html' %}
+                    <!--End of chats list-->
+                    <div class="ks-messages ks-messenger__messages" data-bs-spy="scroll">
                         <div class="ks-header">
                             <div class="ks-description">
                                 <div class="ks-name">{{ chat.groupchat_name }}</div>
@@ -80,109 +36,36 @@
                                     {% endif %}
                                 {% endwith %}
                             </div>
-                            <div class="ks-controls">
-                                <div class="dropdown">
-                                    <button class="btn btn-primary-outline ks-light ks-no-text ks-no-arrow" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="la la-ellipsis-h ks-icon"></span>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right ks-simple" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">
-                                            <span class="la la-user-plus ks-icon"></span>
-                                            <span class="ks-text">Add members</span>
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="la la-eye-slash ks-icon"></span>
-                                            <span class="ks-text">Mark as unread</span>
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="la la-bell-slash-o ks-icon"></span>
-                                            <span class="ks-text">Mute notifications</span>
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="la la-mail-forward ks-icon"></span>
-                                            <span class="ks-text">Forward</span>
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="la la-ban ks-icon"></span>
-                                            <span class="ks-text">Spam</span>
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="la la-trash-o ks-icon"></span>
-                                            <span class="ks-text">Delete</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                        <div class="ks-body ks-scrollable jspScrollable" data-auto-height="" data-reduce-height=".ks-footer" data-fix-height="32" style="height: 480px; overflow: hidden; padding: 0px; width: 701px;" tabindex="0">
-                            <div class="jspContainer" style="width: 701px; height: 481px;">
-                                <div class="jspPane" style="padding: 0px; top: 0px; width: 691px;">
-                                    <ul class="ks-items">
-                                        {% for message in messages %}
-                                            {% if message.author != user %}
-                                                <li class="ks-item ks-from">
-                                                    <span class="ks-avatar ks-online">
-                                                        <img src="{{ message.author.profile.url }}" width="36" height="36" class="rounded-circle">
-                                                    </span>
-                                                    <div class="ks-body">
-                                                        <div class="ks-header">
-                                                            <span class="ks-name">{{ message.author }}</span>
-                                                            <span class="ks-datetime">{{ message.created|date:"H:i" }}</span>
-                                                        </div>
-                                                        <div class="ks-message">{{ message.body }}</div>
-                                                    </div>
-                                                </li>
-                                            {% else %}
-                                                <li class="ks-item ks-self">
-                                                    <span class="ks-avatar ks-offline">
-                                                        <img src="{{ message.author.profile.url }}" width="36" height="36" class="rounded-circle">
-                                                    </span>
-                                                    <div class="ks-body">
-                                                        <div class="ks-header">
-                                                            <span class="ks-name">{{ message.author }}</span>
-                                                            <span class="ks-datetime">{{ message.created|date:"H:i" }}</span>
-                                                        </div>
-                                                        <div class="ks-message">{{ message.body }}</div>
-                                                    </div>
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                                <div class="jspVerticalBar">
-                                    <div class="jspCap jspCapTop"></div>
-                                    <div class="jspTrack" style="height: 481px;">
-                                        <div class="jspDrag" style="height: 206px;">
-                                            <div class="jspDragTop"></div>
-                                            <div class="jspDragBottom"></div>
-                                        </div>
-                                    </div>
-                                    <div class="jspCap jspCapBottom"></div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- messages template -->
+                            {% include 'chat/partials/messages_list.html' %}
+                        <!-- End of messages template -->
                         <div class="ks-footer">
-                            <textarea class="form-control" placeholder="Type something..."></textarea>
-                            <div class="ks-controls">
-                                <button class="btn btn-primary">Send</button>
-                                <a href="#" class="la la-paperclip ks-attachment"></a>
-                                <div class="dropdown dropup">
-                                    <button class="btn btn-link ks-smile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="la la-smile-o"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                            {% if form %}
+                                <form id="send_message_form" class="form-inline d-flex justify-content-between align-items-center"
+                                    hx-ext="ws"
+                                    ws-connect="/ws/chat/{{ chat.group_name }}/"
+                                    ws-send
+                                    _="on htmx:wsAfterSend reset() me">
+                                    <div id="message-input" class="form-group flex-grow-1">
+                                        {% csrf_token %}
+                                        {{ form.body|as_crispy_field }}
+                                    </div>
+                                    <button id="send-message-button" type="submit" class="btn btn-primary mb-3 ms-2">Send</button>
+                                </form>
+                            {% endif %}
+                        </div>             
                     </div>
-                    {% endif %}
                 </div>
             </div>
         </div>
         </div>
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="{% static 'chat/js/index.js' %}"></script>
-    <script src="{% static 'chat/js/navbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'chat/js/index.js' %}"></script>
+    <script type="text/javascript" src="{% static 'chat/js/navbar.js' %}"></script>
+    <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+   
 </body>
 </html>

@@ -1,0 +1,52 @@
+<div class="ks-discussions">
+    <div class="ks-search">
+        <div class="input-icon icon-right icon icon-lg icon-color-primary">
+            <input id="input-group-icon-text" type="text" class="form-control" placeholder="Search">
+            <span class="icon-addon">
+                <span class="la la-search"></span>
+            </span>
+        </div>
+    </div>
+    <div class="ks-body ks-scrollable jspScrollable" data-auto-height="" style="height: 400px; overflow-y: auto; padding: 0px; width: 339px;" tabindex="0">
+        <div class="jspContainer" style="width: 339px; height: 550px;">
+            <div class="jspPane" style="padding: 0px; top: 0px; width: 329px;">
+                <ul class="ks-items">
+                    {% for chat in chats %}
+                    <li class="ks-item ks-closed" data-chat-id="1">
+                        <a href="{% url 'chat:chatview' chat.group_name %}" class="chat-link"
+                        hx-ext="ws"
+                        ws-connect="/ws/chat/preview/{{ chat.group_name }}/">
+                            <span class="ks-avatar">
+                                <img src="{{ chat.group_profile.url }}" width="36" height="36">
+                            </span>
+                            {% with last_message=chat.chat_messages.last %}
+                                <div class="ks-body">  
+                                    <div class="ks-name">
+                                        {{ chat.groupchat_name }}
+                                        {% if last_message %}
+                                            <span class="ks-datetime">{{ last_message.created|date:"H:i" }}</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if last_message %}
+                                        <div class="ks-message"><strong>{{ last_message.author }}:</strong> {{ last_message.body }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endwith %}                                                   
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="jspVerticalBar">
+                <div class="jspCap jspCapTop"></div>
+                <div class="jspTrack" style="height: 550px;">
+                    <div class="jspDrag" style="height: 261px;">
+                        <div class="jspDragTop"></div>
+                        <div class="jspDragBottom"></div>
+                    </div>
+                </div>
+                <div class="jspCap jspCapBottom"></div>
+            </div>
+        </div>
+    </div>
+</div>
