@@ -1,2 +1,2 @@
 # Chat-Application
-Chat application with django &amp; djang-channels &amp; htmx
+Chat application with django &amp; django-channels &amp; htmx
