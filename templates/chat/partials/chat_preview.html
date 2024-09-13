@@ -1,0 +1,16 @@
+<li class="ks-item ks-closed" data-chat-id="{{ last_message.group.group_name }}">
+    <a href="{% url 'chat:chatview' last_message.group.group_name %}" class="chat-link"
+    hx-ext="ws"
+    ws-connect="/ws/chat/preview/{{ last_message.group.group_name }}/">
+        <span class="ks-avatar">
+            <img src="{{ last_message.group.group_profile.url }}" width="36" height="36">
+        </span>
+        <div class="ks-body">  
+            <div class="ks-name">
+                {{ last_message.group.groupchat_name }}
+                <span class="ks-datetime">{{ last_message.created|date:"H:i" }}</span>
+            </div>
+            <div class="ks-message"><strong>{{ last_message.author }}:</strong> {{ last_message.body }}</div>
+        </div>                                                
+    </a>
+</li>

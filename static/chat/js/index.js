@@ -1,3 +1,5 @@
+
+console.log("JavaScript file loaded successfully");
 // scroll to bottom on the intial load
 window.onload = function() {
   const messageContainer = document.getElementById("message-container");
@@ -43,18 +45,56 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-document.addEventListener('DOMContentLoaded', function() {
-  const chatMessages = document.getElementById('ks-items');
-  
-  const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/preview/' + chatGroup + '/');
+document.addEventListener('DOMContentLoaded', function () {
+    const chatItems = document.querySelectorAll('li[data-chat-id]');
+    
 
-  chatSocket.onmessage = function(e) {
-      const data = JSON.parse(e.data);
-      chatMessages.insertAdjacentHTML('beforeend', data.html);
-  };
+    chatItems.forEach(function (chatItem) {
+        const groupName = chatItem.getAttribute('data-chat-id');
+        const socket = new WebSocket(`ws://${window.location.host}/ws/chat/preview/${groupName}/`);
 
-  chatSocket.onclose = function(e) {
-      console.error('Chat socket closed unexpectedly');
-  };
+        socket.onopen = function (event) {
+            console.log(`WebSocket connection opened for group: ${groupName}`, event);
+        };
 
+        socket.onmessage = function (event) {
+            console.log("Received data from WebSocket:", event.data);
+
+            try {
+                const data = JSON.parse(event.data);
+                console.log("Parsed data:", data);
+
+                if (data.html) {
+                    const parser = new DOMParser();
+                    const newLiElement = parser.parseFromString(data.html, 'text/html').querySelector('li');
+
+                    if (newLiElement) {
+                        const newChatId = newLiElement.getAttribute('data-chat-id');
+                        const oldLiElement = document.querySelector(`li[data-chat-id="${newChatId}"]`);
+                        
+                        if (oldLiElement) {
+                            oldLiElement.replaceWith(newLiElement);
+                            console.log("Replaced old chat element with new one");
+                        } else {
+                            console.warn("Old chat element not found for ID:", newChatId);
+                        }
+                    } else {
+                        console.error("New li element not found in the received HTML");
+                    }
+                } else {
+                    console.error("No HTML content in the WebSocket message");
+                }
+            } catch (e) {
+                console.error("Error parsing WebSocket data:", e);
+            }
+        };
+
+        socket.onclose = function (event) {
+            console.log(`WebSocket closed for group: ${groupName}`, event);
+        };
+
+        socket.onerror = function (error) {
+            console.error(`WebSocket error for group: ${groupName}`, error);
+        };
+    });
 });

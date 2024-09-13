@@ -6,6 +6,10 @@ from asgiref.sync import sync_to_async
 from django.template.loader import get_template
 from django.shortcuts import get_object_or_404
 from .models import Group, GroupMessage
+import logging
+
+
+logger = logging.getLogger('chat') 
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -100,10 +104,12 @@ class ChatPreviewConsumer(AsyncWebsocketConsumer):
         new_message = await self.get_last_message()
         context = {
             "user":user,
-            "last_message":new_message
+            "last_message":new_message,
         }
 
-        html = get_template("chat/partials/chat_preview.html").render(context=context)
+        html = await sync_to_async(get_template("chat/partials/chat_preview.html").render)(context=context)
+        
+        logger.debug(f"Sending HTML: {html}")
 
         await self.send(text_data=json.dumps({'html': html}))
     
