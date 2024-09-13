@@ -45,56 +45,65 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    const chatItems = document.querySelectorAll('li[data-chat-id]');
-    
 
-    chatItems.forEach(function (chatItem) {
-        const groupName = chatItem.getAttribute('data-chat-id');
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to create a WebSocket connection for each chat item
+    function createWebSocketConnection(groupName) {
         const socket = new WebSocket(`ws://${window.location.host}/ws/chat/preview/${groupName}/`);
 
         socket.onopen = function (event) {
-            console.log(`WebSocket connection opened for group: ${groupName}`, event);
+            console.info(`WebSocket connection opened for group: ${groupName}`);
         };
 
         socket.onmessage = function (event) {
-            console.log("Received data from WebSocket:", event.data);
-
-            try {
-                const data = JSON.parse(event.data);
-                console.log("Parsed data:", data);
-
-                if (data.html) {
-                    const parser = new DOMParser();
-                    const newLiElement = parser.parseFromString(data.html, 'text/html').querySelector('li');
-
-                    if (newLiElement) {
-                        const newChatId = newLiElement.getAttribute('data-chat-id');
-                        const oldLiElement = document.querySelector(`li[data-chat-id="${newChatId}"]`);
-                        
-                        if (oldLiElement) {
-                            oldLiElement.replaceWith(newLiElement);
-                            console.log("Replaced old chat element with new one");
-                        } else {
-                            console.warn("Old chat element not found for ID:", newChatId);
-                        }
-                    } else {
-                        console.error("New li element not found in the received HTML");
-                    }
-                } else {
-                    console.error("No HTML content in the WebSocket message");
-                }
-            } catch (e) {
-                console.error("Error parsing WebSocket data:", e);
-            }
+            handleWebSocketMessage(event);
         };
 
         socket.onclose = function (event) {
-            console.log(`WebSocket closed for group: ${groupName}`, event);
+            console.warn(`WebSocket closed for group: ${groupName}`);
         };
 
         socket.onerror = function (error) {
             console.error(`WebSocket error for group: ${groupName}`, error);
         };
+
+        return socket;
+    }
+
+    // Function to handle incoming WebSocket messages
+    function handleWebSocketMessage(event) {
+        try {
+            const data = JSON.parse(event.data);
+
+            if (data.html) {
+                const parser = new DOMParser();
+                const newLiElement = parser.parseFromString(data.html, 'text/html').querySelector('li');
+
+                if (newLiElement) {
+                    const newChatId = newLiElement.getAttribute('data-chat-id');
+                    const oldLiElement = document.querySelector(`li[data-chat-id="${newChatId}"]`);
+                    
+                    if (oldLiElement) {
+                        oldLiElement.replaceWith(newLiElement);
+                    } else {
+                        console.warn(`Old chat element not found for ID: ${newChatId}`);
+                    }
+                } else {
+                    console.error("New <li> element not found in the received HTML.");
+                }
+            } else {
+                console.error("No HTML content in the WebSocket message.");
+            }
+        } catch (e) {
+            console.error("Error parsing WebSocket data:", e);
+        }
+    }
+
+    // Initialize WebSocket connections for each chat item
+    const chatItems = document.querySelectorAll('li[data-chat-id]');
+    
+    chatItems.forEach(function (chatItem) {
+        const groupName = chatItem.getAttribute('data-chat-id');
+        createWebSocketConnection(groupName);
     });
 });

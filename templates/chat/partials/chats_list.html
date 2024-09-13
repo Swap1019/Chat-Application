@@ -17,7 +17,11 @@
                         hx-ext="ws"
                         ws-connect="/ws/chat/preview/{{ chat.group_name }}/">
                             <span class="ks-avatar">
-                                <img src="{{ chat.group_profile.url }}" width="36" height="36">
+                                {% if chat.group_profile %}
+                                    <img src="{{ chat.group_profile.url }}" width="36" height="36">
+                                {% else %}
+                                    <i class="fa-solid fa-user-group rounded-circle" width="36" height="36"></i>
+                                {% endif %}
                             </span>
                             {% with last_message=chat.chat_messages.last %}
                                 <div class="ks-body">  
