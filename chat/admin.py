@@ -11,6 +11,7 @@ class GroupAdmin(admin.ModelAdmin):
 class GroupMessageAdmin(admin.ModelAdmin):
     list_display = ['group','author','created','pk']
     list_filter = ['group','author','created']
+    search_fields = ['body','created','body']
 
 
 admin.site.register(Group,GroupAdmin)

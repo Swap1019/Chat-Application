@@ -99,6 +99,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Function to reorder chat items based on timestamp
+    function reorderChatItems() {
+        const chatList = document.querySelector('#chat-list'); // Assuming your chat items are inside an element with ID 'chat-list'
+        const chatItems = Array.from(chatList.querySelectorAll('li[data-chat-id]'));
+
+        // Sort chat items by timestamp
+        chatItems.sort((a, b) => {
+            return new Date(b.getAttribute('data-timestamp')) - new Date(a.getAttribute('data-timestamp'));
+        });
+
+        // Clear the list and append sorted items
+        chatList.innerHTML = '';
+        chatItems.forEach(item => chatList.appendChild(item));
+    }
+
     // Initialize WebSocket connections for each chat item
     const chatItems = document.querySelectorAll('li[data-chat-id]');
     

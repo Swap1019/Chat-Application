@@ -12,7 +12,7 @@
             <div class="jspPane" style="padding: 0px; top: 0px; width: 329px;">
                 <ul class="ks-items">
                     {% for chat in chats %}
-                    <li class="ks-item ks-closed" data-chat-id="{{chat.group_name}}">
+                    <li class="ks-item ks-closed" data-chat-id="{{chat.group_name}}" data-timestamp="{{ last_message.created }}">
                         <a href="{% url 'chat:chatview' chat.group_name %}" class="chat-link"
                         hx-ext="ws"
                         ws-connect="/ws/chat/preview/{{ chat.group_name }}/">

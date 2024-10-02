@@ -37,6 +37,6 @@ class ChatView(LoginRequiredMixin,FormMixin,ListView):
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
         user = get_object_or_404(User,id=self.request.user.id)
-        context['chats'] = user.chat_groups.all
+        context['chats'] = user.chat_groups.all().order_by('-last_message')
         context['messages'] = chat.chat_messages.all()
         return context

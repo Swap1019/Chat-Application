@@ -51,6 +51,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 group=self.group
             )
 
+            self.group.last_message = new_message
+
+            await sync_to_async(self.group.save)(update_fields=["last_message"])
+
             await self.channel_layer.group_send(
                 self.room_group_name, 
                     {
@@ -115,4 +119,4 @@ class ChatPreviewConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def get_last_message(self):
-        return GroupMessage.objects.last()
+        return GroupMessage.objects.latest()
