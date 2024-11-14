@@ -1,4 +1,4 @@
-<li class="ks-item ks-closed" data-chat-id="{{ last_message.group.group_name }}" data-timestamp="{{ last_message.created }}">
+<li class="ks-item ks-closed flex" id="{{ last_message.group.group_name }}" data-chat-id="{{ last_message.group.group_name }}" data-timestamp="{{ last_message.created }}" style="display: flex; flex-direction: column; order: 0; ">
     <a href="{% url 'chat:chatview' last_message.group.group_name %}" class="chat-link"
     hx-ext="ws"
     ws-connect="/ws/chat/preview/{{ last_message.group.group_name }}/">

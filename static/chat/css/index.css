@@ -904,3 +904,7 @@ body{
         margin-bottom: 20px
     }
 }
+
+.ks-item.ks-closed.top {
+    margin-top: 0px;
+}

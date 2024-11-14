@@ -7,12 +7,13 @@
             </span>
         </div>
     </div>
-    <div class="ks-body ks-scrollable jspScrollable" data-auto-height="" style="height: 400px; overflow-y: auto; padding: 0px; width: 339px;" tabindex="0">
+    <div class="ks-body ks-scrollable jspScrollable" data-auto-height="" style="height: 400px; overflow-y: auto; padding: 0px; width: 339px; display: flex; flex-direction: column;" tabindex="0">
         <div class="jspContainer" style="width: 339px; height: 550px;">
             <div class="jspPane" style="padding: 0px; top: 0px; width: 329px;">
-                <ul class="ks-items">
+                <div class="ks-items" style="display: flex; flex-direction: column;">
+                    
                     {% for chat in chats %}
-                    <li class="ks-item ks-closed" data-chat-id="{{chat.group_name}}" data-timestamp="{{ last_message.created }}">
+                    <li class="ks-item ks-closed" id="{{chat.group_name}}" data-chat-id="{{chat.group_name}}" data-timestamp="{{ last_message.created }}" style="order: 1; ">
                         <a href="{% url 'chat:chatview' chat.group_name %}" class="chat-link"
                         hx-ext="ws"
                         ws-connect="/ws/chat/preview/{{ chat.group_name }}/">
@@ -39,7 +40,8 @@
                         </a>
                     </li>
                     {% endfor %}
-                </ul>
+                    
+                </div>
             </div>
             <div class="jspVerticalBar">
                 <div class="jspCap jspCapTop"></div>
@@ -54,3 +56,21 @@
         </div>
     </div>
 </div>
+<style>
+    #flex {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #x {
+        order: 2;
+    }
+
+    #y {
+        order: 1;
+    }
+
+    #z {
+        order: 3;
+    }
+</style>
